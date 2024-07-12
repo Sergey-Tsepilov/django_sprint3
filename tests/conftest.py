@@ -7,12 +7,12 @@ from mixer.backend.django import mixer as _mixer
 
 try:
     from blog.models import Category, Location, Post  # noqa:F401
-except ImportError:
+except ImportError as error:
     raise AssertionError(
         'В приложении `blog` опишите '
         'модели `Post, Category, Location`'
-    )
-except RuntimeError:
+    ) from error
+except RuntimeError as error:
     registered_apps = set(app.name for app in apps.get_app_configs())
     need_apps = {'blog': 'blog', 'pages': 'pages'}
     if not set(need_apps.values()).intersection(registered_apps):
@@ -23,7 +23,7 @@ except RuntimeError:
         if need_app_conf_name not in registered_apps:
             raise AssertionError(
                 f'Убедитесь, что зарегистрировано приложение {need_app_name}'
-            )
+            ) from error
 
 pytest_plugins = [
     'fixtures.fixture_data'
