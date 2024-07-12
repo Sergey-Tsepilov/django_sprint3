@@ -15,7 +15,8 @@ pytestmark = [
     ('field', 'type', 'params'), [
         ('title', CharField, {'max_length': 256}),
         ('text', TextField, {}),
-        ('pub_date', DateTimeField, {'auto_now': False, 'auto_now_add': False}),
+        ('pub_date', DateTimeField, {
+         'auto_now': False, 'auto_now_add': False}),
         ('author', ForeignKey, {'null': False}),
         ('location', ForeignKey, {'null': True}),
         ('category', ForeignKey, {'null': True, 'blank': False}),
@@ -33,11 +34,11 @@ def test_author_on_delete(posts_with_author):
     author = posts_with_author[0].author
     try:
         author.delete()
-    except IntegrityError:
+    except IntegrityError as error:
         raise AssertionError(
             'Проверьте, что значение атрибута `on_delete` '
             'поля `author` в модели `Post` соответствует заданию.'
-        )
+        ) from error
     assert not Post.objects.filter(author=author).exists(), (
         'Проверьте, что значение атрибута `on_delete` '
         'поля `author` в модели `Post` соответствует заданию.'
@@ -48,11 +49,11 @@ def test_location_on_delete(posts_with_published_locations):
     location = posts_with_published_locations[0].location
     try:
         location.delete()
-    except IntegrityError:
+    except IntegrityError as error:
         raise AssertionError(
             'Проверьте, что значение атрибута `on_delete` '
             'поля `location` в модели `Post` соответствует заданию.'
-        )
+        ) from error
     assert Post.objects.filter(location=location).exists(), (
         'Проверьте, что значение атрибута `on_delete` '
         'поля `location` в модели `Post` соответствует заданию.'
