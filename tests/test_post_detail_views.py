@@ -38,11 +38,11 @@ def test_posts_page_pk_unpublished_location(
 def test_posts_page_pk_post_doesnt_exists(user_client):
     try:
         response = user_client.get('/posts/1/')
-    except Post.DoesNotExist:
+    except Post.DoesNotExist as error:
         raise AssertionError(
             'Убедитесь, что при обращении к странице несуществующего поста '
             'во view-функции не возникает необрабатываемого исключения.'
-        )
+        ) from error
     assert response.status_code != HTTPStatus.OK, (
         'Убедитесь, что при запросе к несуществующему посту не возвращается '
         'страница отдельного поста.'
