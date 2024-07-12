@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytest
-import pytz
+import pytz  # type: ignore
 from django.contrib.auth import get_user_model
 
 N_TEST_POSTS = 4
